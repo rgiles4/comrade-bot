@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { connectMongo } from './mongo-db.js';
 import { registerCommands } from './lib/api.js';
 import { Client, GatewayIntentBits } from 'discord.js';
 import { commands } from './lib/commands.js';
@@ -8,6 +9,10 @@ dotenv.config();
 const clientId = process.env.CLIENT_ID;
 if (!clientId) {
     throw new Error('CLIENT_ID is not defined in environment variables.');
+}
+const mongodbUri = process.env.MONGODB_URI;
+if (!mongodbUri) {
+    throw new Error('MONGODB_URI is not defined in environment variables.');
 }
 const botToken = process.env.BOT_TOKEN;
 if (!botToken) {
@@ -27,8 +32,6 @@ const client = new Client({ intents:
     ]
 });
 
-client.login(botToken);
-
 client.on('clientReady', () => {
     console.log(`Logged in as ${client.user.tag}!`);
     registerCommands(); // Register commands on startup
@@ -45,3 +48,10 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
 });
+
+async function start() {
+    await client.login(botToken);
+    await connectMongo();
+}
+
+start();
