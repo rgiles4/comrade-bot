@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { connectMongo } from './mongo-db.js';
+import { connectMongo, client as MongoClient } from './mongo-db.js';
 import { registerCommands } from './lib/api.js';
 import { Client, GatewayIntentBits } from 'discord.js';
 import { commands } from './lib/commands.js';
@@ -24,7 +24,7 @@ if (!guildId) {
 }
 
 const commandMap = new Map(commands.map(cmd => [cmd.data.name, cmd])); // Map Commands to Handler
-const client = new Client({ intents:
+const discordClient = new Client({ intents:
     [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
@@ -32,12 +32,12 @@ const client = new Client({ intents:
     ]
 });
 
-client.on('clientReady', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+discordClient.on('clientReady', () => {
+    console.log(`Logged in as ${discordClient.user.tag}!`);
     registerCommands(); // Register commands on startup
 });
 
-client.on('interactionCreate', async interaction => {
+discordClient.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
     const command = commandMap.get(interaction.commandName);
     if (!command) return;
@@ -49,9 +49,20 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+async function stop() {
+    await MongoClient.close();
+    console.log('MongoDB connection closed.');
+    await discordClient.destroy();
+    console.log('Discord client destroyed.');
+    process.exit(0);
+}
+
 async function start() {
-    await client.login(botToken);
+    await discordClient.login(botToken);
     await connectMongo();
 }
+
+process.on('SIGTERM', stop);
+process.on('SIGINT', stop);
 
 start();
