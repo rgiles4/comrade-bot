@@ -1,0 +1,29 @@
+{
+  "name": "comrade-bot",
+  "version": "1.0.0",
+  "description": "A Discord bot that maintains a social credit system",
+  "homepage": "https://github.com/rgiles4/comrade-bot#readme",
+  "bugs": {
+    "url": "https://github.com/rgiles4/comrade-bot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rgiles4/comrade-bot.git"
+  },
+  "license": "ISC",
+  "author": "rgiles4",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.22.1",
+    "dotenv": "^17.2.2"
+  },
+  "devDependencies": {
+    "eslint": "8.40.0",
+    "tape": "5.6.3"
+  }
+}
