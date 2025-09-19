@@ -39,6 +39,10 @@ discordClient.on('clientReady', () => {
 
 discordClient.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
+    if (interaction.guildId !== guildId) {
+        await interaction.reply({ content: 'This bot is not available in this server.', ephemeral: true });
+        return;
+    }
     const command = commandMap.get(interaction.commandName);
     if (!command) return;
     try {
@@ -50,6 +54,7 @@ discordClient.on('interactionCreate', async interaction => {
 });
 
 async function stop() {
+    console.log('Shutting down gracefully...');
     await MongoClient.close();
     console.log('MongoDB connection closed.');
     await discordClient.destroy();
