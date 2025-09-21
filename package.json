@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "lint": "eslint app.js lib/*.js",
     "husky": "husky || true",
     "prepare": "husky"
@@ -31,6 +31,7 @@
     "eslint": "9.36.0",
     "globals": "16.4.0",
     "husky": "^9.1.7",
+    "nodemon": "^3.1.10",
     "tape": "5.6.3"
   }
 }
